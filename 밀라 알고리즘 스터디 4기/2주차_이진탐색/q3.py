@@ -42,5 +42,35 @@ def solution():
     for dot in dot_list:
         print(dot_dict.get(dot), end=" ")
 
+# 만약 '서로 다른' 조건이 없다면,
+# 예제 1 변형) 2 4 -10 4 5 -9 -> 0 1 2 3 3 5
+# 예제 2) 1000 999 1000 999 1000 999 -> 3 0 3 0 3 0
+
+from collections import Counter
+
+def find_big_idx_than(dict, a):
+    result = {}
+    for key, value in dict.items():
+        if key > a:
+            result[key] = value
+    return result
+
+def solution():
+    N = int(input())
+    dot_list = list(map(int, input().split()))
+    dot_dict = {v:i for i, v in enumerate(sorted(set(dot_list.copy())))}
+    dot_dict_reverse = {v:k for k,v in dot_dict.items()}
+    dot_counter = Counter(dot_list)
+
+    for dot in dot_counter:
+        if dot_counter[dot] > 1:
+            dot_idx = dot_dict[dot]
+            update_need_dot_dict = find_big_idx_than(dot_dict_reverse, dot_idx)
+            for key_idx, val_num in update_need_dot_dict.items():
+                dot_dict[val_num] += dot_counter[dot]-1
+    
+    for dot in dot_list:
+        print(dot_dict.get(dot), end=" ")
+
 if __name__ == "__main__":
     solution()
