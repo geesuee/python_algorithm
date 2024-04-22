@@ -9,9 +9,8 @@ if __name__ == "__main__":
     print(answer)
 
 # 백준
-from sys import stdin, stdout
+from sys import stdin
 input = stdin.readline
-print = stdout.write
 
 def solution():
     pass
