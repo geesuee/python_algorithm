@@ -42,7 +42,7 @@ def bfs(N, K, arr):
 
         # 이동할 수 있는 자리 연산
         for nv in (v-1, v+1, 2*v):
-            if 0 <= nv < 100001 and not arr[nv]:
+            if 0 <= nv < 100001 and arr[nv] == 0: # and not arr[nv] 와 동일, 방문한 적 없는지 확인
                 # 여기까지 오기 위해 몇 개의 노드를 거쳤는지 저장
                 arr[nv] = arr[v] + 1
                 q.append(nv)
