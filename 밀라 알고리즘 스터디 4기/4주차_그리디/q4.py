@@ -43,13 +43,14 @@ def solution():
     price = K
     while stack:
         coin = stack.pop()
-
-        if coin > price:
-            continue
+				
+		# 생각해보니 없어도 되는 부분
+		# 이럴 경우 알아서 아래 연산에서 += 0, price는 그대로
+        # if coin > price:
+        #    continue
         
-        coin_cnt = price // coin
-        used_coin += coin_cnt
-        price -= coin * coin_cnt
+        used_coin += price // coin
+        price = price % coin
 
         if price == 0:
             break
