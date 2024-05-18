@@ -44,10 +44,12 @@ def solution1():
 
         for i in range(start, C):
             char = alphabet[i]
+            answer.append(char)
             if char in vowel:
-                backtracking(i+1, answer+[char], vowel_count+1, consonant_count)
+                backtracking(i+1, answer, vowel_count+1, consonant_count)
             else:
-                backtracking(i+1, answer+[char], vowel_count, consonant_count+1)
+                backtracking(i+1, answer, vowel_count, consonant_count+1)
+            answer.pop()
 
     backtracking(0,[],0,0)
 
