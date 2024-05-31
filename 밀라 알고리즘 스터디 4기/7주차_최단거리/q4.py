@@ -98,7 +98,7 @@ def dijkstra(graph, goal_r, goal_c):
 
     return distances
 
-# BFS 풀이
+# BFS 풀이 -> 이것도 틀린 풀이 어디가 틀렸지..?
 def bfs(graph, goal_r, goal_c):
     n = len(graph)
     m = len(graph[0])
