@@ -98,7 +98,7 @@ def dijkstra(graph, goal_r, goal_c):
 
     return distances
 
-# BFS 풀이 -> 수정중
+# BFS 풀이
 def bfs(graph, goal_r, goal_c):
     n = len(graph)
     m = len(graph[0])
@@ -109,26 +109,35 @@ def bfs(graph, goal_r, goal_c):
 
     # 결과 배열에 초기값을 -1로 설정
     result = [[-1] * m for _ in range(n)]
-    visited = set()
-    visited.add((goal_r, goal_c))
+    result[goal_r][goal_c] = 0
+
+    visited = [[False]*(m) for _ in range(n)]
+    visited[goal_r][goal_c] = True
+
     queue = deque()
     queue.append((goal_r, goal_c))
 
     while queue:
         curr_r, curr_c = queue.popleft()
+        # print("curr_r:", curr_r, " curr_c:", curr_c)
 
         for i in range(4):
             new_r = curr_r + dr[i]
             new_c = curr_c + dc[i]
-
-            if (0 <= new_r <= n-1) and (0 <= new_c <= m-1) and (new_r, new_c) not in visited:
+            # print("ㄴ new_r:", new_r, " new_c", new_c)
+            
+            if (0 <= new_r < n) and (0 <= new_c < m) and visited[new_r][new_c] == False:
+                # print("- 지도 안에 있고, 방문한 적 없음")
+                visited[new_r][new_c] = True
                 # 원래 못 가는 땅
                 if graph[new_r][new_c] == 0:
+                    # print("-- 원래 못가는 땅, 0 처리")
                     result[new_r][new_c] = 0
                 # 원래 갈 수 있는 땅
                 elif graph[new_r][new_c] == 1:
+                    # print("-- 갈 수 있는 땅")
                     result[new_r][new_c] = result[curr_r][curr_c] + 1
-                    queue.append((goal_r, goal_c))
+                    queue.append((new_r, new_c))
     
     return result
 
@@ -146,15 +155,11 @@ def solution():
         if 2 in line:
             goal_r = i
             goal_c = line.index(2)
-    
-    print(goal_r, goal_c)
 
-    result = dijkstra(graph, goal_r, goal_c)
-    # result = bfs(graph, goal_r, goal_c)
+    # result = dijkstra(graph, goal_r, goal_c)
+    result = bfs(graph, goal_r, goal_c)
     for i in range(n):
         print(*result[i])
-
-
 
 if __name__ == "__main__":
     solution()
