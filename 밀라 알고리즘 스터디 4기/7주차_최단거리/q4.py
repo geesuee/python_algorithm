@@ -34,10 +34,10 @@
 4. 다익스트라로 목표 지점에서부터 모든 지점까지 거리 연산
     1. heapq 로 구현
     2. 원래 갈 수 없는 땅은 0, 원래 갈 수 있지만 목표 지점에서 갈 수 없는 땅은 -1, 갈 수 있는 땅은 거리 연산
+    3. 2에서 출발하는 방식으로는 2에서 갈 수 있는 곳만 탐색하게 됨, 2에서 갈 수 없는 땅을 0으로 업데이트 하는 로직 필요(계속 틀렸던 이유!!)
 5. 위치 순서대로 목표 지점에서 해당 지점까지 거리 출력
 
 > 간선 가중치가 다 1로 동일한 상황이기 때문에 BFS 가 더 유리
-> BFS 코드 수정 중
 """
 
 from sys import stdin
@@ -45,7 +45,7 @@ input = stdin.readline
 import heapq
 from collections import deque
 
-# 다익스트라 풀이 -> 틀린 풀이
+# 다익스트라 풀이
 def dijkstra(graph, goal_r, goal_c):
     n = len(graph)
     m = len(graph[0])
@@ -76,19 +76,11 @@ def dijkstra(graph, goal_r, goal_c):
             # print("-- new_r: ", new_r, " new_c:", new_c)
 
             # 지도 안 여부 확인
-            if (0 <= new_r <= n-1) and (0 <= new_c <= m-1) and visited[new_r][new_c] == False:
-                # print("ㄴ 지도 안에 있고, 안 가봄")
-                # 원래 갈 수 없는 땅
-                if graph[new_r][new_c] == 0:
-                    # print("ㄴ 못 가는 땅ㅜ")
-                    distances[new_r][new_c] = 0
-                # 원래 갈 수 있는 땅
-                if graph[new_r][new_c] == 1:
-                    # print("ㄴ 갈 수 있는 땅!")
-                    new_distance = curr_dist + 1
-                    if new_distance < distances[new_r][new_c]:
-                        distances[new_r][new_c] = new_distance
-                        heapq.heappush(priority_queue, (new_distance, new_r, new_c))
+            if (0 <= new_r < n) and (0 <= new_c < m) and visited[new_r][new_c] == False and graph[new_r][new_c] == 1:
+                new_distance = curr_dist + 1
+                if new_distance < distances[new_r][new_c]:
+                    distances[new_r][new_c] = new_distance
+                    heapq.heappush(priority_queue, (new_distance, new_r, new_c))
 
     # 갈 수 없어서 값이 갱신되지 않은 곳은 -1로 변경
     for i in range(n):
@@ -96,9 +88,15 @@ def dijkstra(graph, goal_r, goal_c):
             if distances[i][j] == float('inf'):
                 distances[i][j] = -1
 
+    # 2로부터 출발해서 2가 닿지 못하는 곳은 0으로 변경
+    for i in range(n):
+        for j in range(m):
+            if graph[i][j] == 0:
+                distances[i][j] = 0
+
     return distances
 
-# BFS 풀이 -> 이것도 틀린 풀이 어디가 틀렸지..?
+# BFS 풀이
 def bfs(graph, goal_r, goal_c):
     n = len(graph)
     m = len(graph[0])
@@ -126,18 +124,16 @@ def bfs(graph, goal_r, goal_c):
             new_c = curr_c + dc[i]
             # print("ㄴ new_r:", new_r, " new_c", new_c)
             
-            if (0 <= new_r < n) and (0 <= new_c < m) and visited[new_r][new_c] == False:
-                # print("- 지도 안에 있고, 방문한 적 없음")
+            if (0 <= new_r < n) and (0 <= new_c < m) and visited[new_r][new_c] == False and graph[new_r][new_c] == 1:
                 visited[new_r][new_c] = True
-                # 원래 못 가는 땅
-                if graph[new_r][new_c] == 0:
-                    # print("-- 원래 못가는 땅, 0 처리")
-                    result[new_r][new_c] = 0
-                # 원래 갈 수 있는 땅
-                elif graph[new_r][new_c] == 1:
-                    # print("-- 갈 수 있는 땅")
-                    result[new_r][new_c] = result[curr_r][curr_c] + 1
-                    queue.append((new_r, new_c))
+                result[new_r][new_c] = result[curr_r][curr_c] + 1
+                queue.append((new_r, new_c))
+    
+    # 2로부터 출발해서 2가 닿지 못하는 곳은 0으로 변경
+    for i in range(n):
+        for j in range(m):
+            if graph[i][j] == 0:
+                result[i][j] = 0
     
     return result
 
@@ -156,8 +152,8 @@ def solution():
             goal_r = i
             goal_c = line.index(2)
 
-    # result = dijkstra(graph, goal_r, goal_c)
-    result = bfs(graph, goal_r, goal_c)
+    result = dijkstra(graph, goal_r, goal_c)
+    # result = bfs(graph, goal_r, goal_c)
     for i in range(n):
         print(*result[i])
 
