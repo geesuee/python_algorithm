@@ -1,9 +1,12 @@
+# 재귀로 세그먼트 트리 구현
+
 class SegmentTree:
     def __init__(self, arr):
         # 주어진 배열의 길이
         self.n = len(arr)
         # 주어진 배열의 길이에 따라 정해지는 세그먼트 트리의 크기
-        size = 2 * (2 ** (self.n - 1).bit_length())
+        # size = 2 * (2 ** (self.n - 1).bit_length())
+        size = 4 * self.n
         self.tree = [0] * size
         # 배열을 사용하여 세그먼트 트리(=구간 합 트리) 생성
         self.build(arr=arr, node=1, start=0, end=self.n - 1)
