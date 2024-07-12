@@ -55,13 +55,14 @@ def solution():
         if not check:
             for _ in range(k):
                 dish = belt.popleft()
-                check.push(dish)
+                check.append(dish)
         
         # 덱 안에 쿠폰 번호 c 가 있는지 확인
-        if c in check:
-            curr_dish = len(set(check))
+        check_set = set(check)
+        if c in check_set:
+            curr_dish = len(check_set)
         else:
-            curr_dish = len(set(check)) + 1
+            curr_dish = len(check_set) + 1
         
         # 최댓값 갱신
         if curr_dish > max_dish:
